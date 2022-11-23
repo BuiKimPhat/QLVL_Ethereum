@@ -1,31 +1,18 @@
 {
-  "name": "@my-app/monorepo",
+  "name": "pet-shop",
   "version": "1.0.0",
-  "keywords": [
-    "ethereum",
-    "react",
-    "workspaces",
-    "yarn"
-  ],
-  "private": true,
+  "description": "",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
-    "subgraph:auth": "yarn workspace @my-app/subgraph auth",
-    "subgraph:codegen": "yarn workspace @my-app/subgraph codegen",
-    "subgraph:build": "yarn workspace @my-app/subgraph build",
-    "subgraph:deploy": "yarn workspace @my-app/subgraph deploy",
-    "react-app:build": "yarn workspace @my-app/react-app build",
-    "react-app:eject": "yarn workspace @my-app/react-app eject",
-    "react-app:ipfs": "yarn workspace @my-app/react-app ipfs",
-    "react-app:start": "yarn workspace @my-app/react-app start",
-    "react-app:test": "yarn workspace @my-app/react-app test",
-    "ganache": "ganache --wallet.seed myCustomSeed"
+    "dev": "lite-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  },
-  "dependencies": {
-    "ganache": "^7.4.4"
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.3.0"
   }
 }
