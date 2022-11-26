@@ -1,0 +1,65 @@
+[
+    {
+        "id": "AP001",
+        "name": "Máy in Canon",
+        "quantity": 10,
+        "unit": "cái",
+        "isActive": true
+    },
+    {
+        "id": "AP002",
+        "name": "Máy fax Canon",
+        "quantity": 15,
+        "unit": "cái",
+        "isActive": true
+    },
+    {
+        "id": "AP003",
+        "name": "Máy photo Canon",
+        "quantity": 7,
+        "unit": "cái",
+        "isActive": true
+    },
+    {
+        "id": "AP004",
+        "name": "Máy chấm công LG",
+        "quantity": 18,
+        "unit": "cái",
+        "isActive": true
+    },
+    {
+        "id": "NET001",
+        "name": "Router Cisco",
+        "quantity": 20,
+        "unit": "cái",
+        "isActive": true
+    },
+    {
+        "id": "NET002",
+        "name": "Switch Cisco",
+        "quantity": 22,
+        "unit": "cái",
+        "isActive": true
+    },
+    {
+        "id": "NET003",
+        "name": "Cáp mạng CAT6",
+        "quantity": 700,
+        "unit": "mét",
+        "isActive": true
+    },
+    {
+        "id": "OF001",
+        "name": "Bút bi",
+        "quantity": 150,
+        "unit": "cái",
+        "isActive": true
+    },
+    {
+        "id": "OF002",
+        "name": "Giấy A4",
+        "quantity": 600,
+        "unit": "tờ",
+        "isActive": true
+    }
+]
