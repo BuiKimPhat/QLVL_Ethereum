@@ -28,7 +28,7 @@ contract("SupplyContract", (accounts) => {
 
     describe("User transactions", async () => {
         it("Get all user transactions", async () => {
-            const supplies = await supplyContract.GetAllSupplies({ from: accounts[0] });
+            const supplies = await supplyContract.GetTransactions({ from: accounts[0] });
         });
         it("Perform paper transaction", async () => {
             const value = await supplyContract.Transact("OF002", 10, { from: accounts[0] });

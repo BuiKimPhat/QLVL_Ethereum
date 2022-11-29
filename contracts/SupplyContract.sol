@@ -11,7 +11,7 @@ contract SupplyContract {
         bool isActive;
     }
     Supply[] public supplies; 
-    function CheckSupplyExist(string memory id) private returns (bool) {
+    function CheckSupplyExist(string memory id) private view returns (bool) {
         uint i = 0;
         for (i = 0; i < supplies.length; i++){
             if (keccak256(abi.encodePacked(supplies[i].id)) == keccak256(abi.encodePacked(id))) return true;
@@ -24,10 +24,10 @@ contract SupplyContract {
         supplies.push(newSupply);
         return true;
     }
-    function GetAllSupplies()  public returns (Supply[] memory) {
+    function GetAllSupplies()  public view returns (Supply[] memory) {
         return supplies;
     }
-    function GetSuppliesByID(string memory id)  public returns (Supply memory) {
+    function GetSuppliesByID(string memory id)  public view returns (Supply memory) {
         uint i = 0;
         for (i = 0; i < supplies.length; i++){
             if (keccak256(abi.encodePacked(supplies[i].id)) == keccak256(abi.encodePacked(id))) return supplies[i];
@@ -62,8 +62,8 @@ contract SupplyContract {
         uint quantity;
     }
     mapping (address => UserTrans[]) tblUserTrans;
-    function GetTransactions(address userId, string memory supplyId)  public returns (UserTrans[] memory) {
-        return tblUserTrans[userId];
+    function GetTransactions()  public view returns (UserTrans[] memory) {
+        return tblUserTrans[msg.sender];
     }
     function Transact(string memory id, uint quantity)  public returns (bool) {
         uint i = 0;
