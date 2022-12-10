@@ -20,12 +20,29 @@ contract SupplyContract {
     }
     function CreateSupply (string memory id, string memory name, uint quantity, string memory unit) public returns (bool) {
         if (CheckSupplyExist(id)) return false;
-        Supply memory newSupply =  Supply(id, name, quantity, unit, true);
+        Supply memory newSupply = Supply(id, name, quantity, unit, true);
         supplies.push(newSupply);
         return true;
     }
-    function GetAllSupplies()  public view returns (Supply[] memory) {
-        return supplies;
+
+    function GetSupplyCount() public view returns (uint){
+        return supplies.length;
+    }
+
+    function GetAllSupplies()  public view returns (string[] memory, string[] memory, uint[] memory, string[] memory, bool[] memory) {
+        string[] memory ids = new string[](supplies.length);
+        string[] memory names = new string[](supplies.length);
+        uint[] memory quantities = new uint[](supplies.length);
+        string[] memory units = new string[](supplies.length);
+        bool[] memory actives = new bool[](supplies.length);
+        for (uint i = 0; i < supplies.length; i++) {
+            ids[i] = (supplies[i].id);
+            names[i] = (supplies[i].name);
+            quantities[i] = (supplies[i].quantity);
+            units[i] = (supplies[i].unit);
+            actives[i] = (supplies[i].isActive);
+        }
+        return (ids, names, quantities, units, actives);
     }
     function GetSuppliesByID(string memory id)  public view returns (Supply memory) {
         uint i = 0;
