@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title> Tạo vật tư mới - Website quản lý vật tư</title>
+    <title> Chỉnh sửa vật tư - Website quản lý vật tư</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -23,18 +23,18 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-8 col-sm-push-2">
-                <h1 class="text-center">Tạo vật tư mới</h1>
+                <h1 class="text-center">Chỉnh sửa thông tin vật tư</h1>
                 <ul class="nav nav-tabs">
                     <li><a href="/">Tất cả vật tư</a></li>
-                    <li class="active"><a href="createSupply.html">Thêm vật tư</a></li>
-                    <li><a href="editSupply.html">Chỉnh sửa vật tư</a></li>
+                    <li><a href="createSupply.html">Thêm vật tư</a></li>
+                    <li class="active"><a href="editSupply.html">Chỉnh sửa vật tư</a></li>
                     <li><a href="transactions.html">Vật tư đã lấy</a></li>
                 </ul>
                 <br />
             </div>
         </div>
 
-        <form id="newSupplyForm" action="/">
+        <form id="editSupplyForm" action="/">
             <div class="form-group">
                 <label for="supply-id">ID:</label>
                 <input class="form-control" id="supply-id" />
@@ -51,8 +51,7 @@
                 <label for="supply-unit">Đơn vị:</label>
                 <input class="form-control" id="supply-unit" />
             </div>
-            <button type="submit" class="btn btn-success">Tạo mới</button>
-            <button class="btn btn-default pull-right" id="initDataBtn">Khởi tạo dữ liệu</button>
+            <button type="submit" class="btn btn-success">Lưu thay đổi</button>
         </form>
     </div>
 

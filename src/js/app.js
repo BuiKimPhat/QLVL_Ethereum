@@ -3,39 +3,6 @@ App = {
   contracts: {},
 
   init: async function () {
-    // Load pets.
-    // $.getJSON('../pets.json', function (data) {
-    //   var petsRow = $('#petsRow');
-    //   var petTemplate = $('#petTemplate');
-
-    //   for (i = 0; i < data.length; i++) {
-    //     petTemplate.find('.panel-title').text(data[i].name);
-        // petTemplate.find('img').attr('src', data[i].picture);
-    //     petTemplate.find('.pet-breed').text(data[i].breed);
-    //     petTemplate.find('.pet-age').text(data[i].age);
-    //     petTemplate.find('.pet-location').text(data[i].location);
-    //     petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
-
-    //     petsRow.append(petTemplate.html());
-    //   }
-    // });
-
-    // Load supplies
-    // $.getJSON('../supplies.json', function (data) {
-    //   var supplyRow = $('#supplyRow');
-    //   var supplyTemplate = $('#supplyTemplate');
-
-    //   for (i = 0; i < data.length; i++) {
-    //     if (!data[i].isActive) continue;
-    //     supplyTemplate.find('.panel-title').text(data[i].name);
-    //     supplyTemplate.find('.supply-quantity').text(data[i].quantity);
-    //     supplyTemplate.find('.supply-unit').text(data[i].unit);
-    //     supplyTemplate.find('.btn-adopt').attr('data-id', data[i].id);
-
-    //     supplyRow.append(supplyTemplate.html());
-    //   }
-    // });
-
     return await App.initWeb3();
   },
 
@@ -80,12 +47,22 @@ App = {
     return App.bindEvents();
   },
 
-  bindEvents: function () {
-    $(document).on('click', '.btn-adopt', App.handleTransfer);
-    $(document).on('submit', '#newSupplyForm', App.handleNewSupply);
+  initData: () => {
+    $.getJSON('../supplies.json', function (data) {
+      for (i = 0; i < data.length; i++) {
+        App.createSupply(data[i].id, data[i].name, data[i].quantity, data[i].unit);
+      }
+    });
   },
 
-  getAllSupplies: function() {
+  bindEvents: function () {
+    $(document).on('click', '.btn-transfer', App.handleTransfer);
+    $(document).on('click', '.btn-init-data', App.initData);
+    $(document).on('submit', '#newSupplyForm', App.handleNewSupply);
+    $(document).on('submit', '#editSupplyForm', App.handleEditSupply);
+  },
+
+  getAllSupplies: function () {
     var supplyInstance;
 
     var supplyRow = $('#supplyRow');
@@ -93,21 +70,23 @@ App = {
 
     App.contracts.SupplyContract.deployed().then(function (instance) {
       supplyInstance = instance;
+      console.log(supplyInstance);
 
       return supplyInstance.GetAllSupplies.call();
     }).then(supplies => {
       console.log(supplies);
       supplyRow.empty();
-      const [ids, names, quantities, units, actives] = supplies;
+      const { 0: ids, 1: names, 2: quantities, 3: units, 4: actives } = supplies;
       for (i = 0; i < ids.length; i++) {
         if (!actives[i]) continue;
         supplyTemplate.find('.panel-title').text(names[i]);
+        supplyTemplate.find('.supply-id').text(ids[i]);
         supplyTemplate.find('.supply-quantity').text(quantities[i]);
         supplyTemplate.find('.supply-unit').text(units[i]);
-        supplyTemplate.find('.btn-adopt').attr('data-id', ids[i]);
-  
+        supplyTemplate.find('.btn-transfer').attr('data-id', ids[i]);
+
         supplyRow.append(supplyTemplate.html());
-      }  
+      }
     }).catch(err => {
       console.log(err);
     })
@@ -116,74 +95,30 @@ App = {
 
   createSupply: (id, name, quantity, unit) => {
     var supplyInstance;
-
-    App.contracts.SupplyContract.deployed().then(function (instance) {
-      supplyInstance = instance;
-
-      return supplyInstance.CreateSupply.call(id, name, quantity, unit);
-    }).then(result => {
-      return App.getAllSupplies.call();
-    }).catch(err => {
-      console.log(err.message);
-    })
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) console.log(error);
+      var account = accounts[0];
+      App.contracts.SupplyContract.deployed().then(function (instance) {
+        supplyInstance = instance;
+        console.log(supplyInstance);
+        return supplyInstance.CreateSupply.sendTransaction(id, name, quantity, unit, {from: account});
+      }).then(result => {
+        console.log(result);
+        window.location.assign("/");
+      }).catch(err => {
+        console.log(err.message);
+      })
+    });
   },
 
   handleNewSupply: (e) => {
     e.preventDefault();
-    var id = $('#supply-id').val();
-    var name = $('#supply-name').val();
-    var quantity = $('#supply-quantity').val();
-    var unit = $('#supply-unit').val();
-    App.createSupply(id,name,quantity,unit);
+    const id = $('#supply-id').val();
+    const name = $('#supply-name').val();
+    const quantity = $('#supply-quantity').val();
+    const unit = $('#supply-unit').val();
+    App.createSupply(id, name, quantity, unit);
   }
-
-  // markAdopted: function () {
-    // var supplyInstance;
-
-    // App.contracts.SupplyContract.deployed().then(function (instance) {
-    //   supplyInstance = instance;
-
-    //   return supplyInstance.GetAllSupplies.call();
-    // }).then(function (adopters) {
-    //   // for (i = 0; i < adopters.length; i++) {
-    //   //   if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
-    //   //     $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
-    //   //   }
-    //   // }
-    // }).catch(function (err) {
-    //   console.log(err.message);
-    // });
-
-  // },
-
-  // handleAdopt: function (event) {
-  //   event.preventDefault();
-
-  //   var petId = parseInt($(event.target).data('id'));
-
-  //   var supplyInstance;
-
-  //   web3.eth.getAccounts(function (error, accounts) {
-  //     if (error) {
-  //       console.log(error);
-  //     }
-
-  //     var account = accounts[0];
-
-  //     App.contracts.SupplyContract.deployed().then(function (instance) {
-  //       supplyInstance = instance;
-
-  //       // Execute adopt as a transaction by sending account
-  //       return supplyInstance.Transact(petId, { from: account });
-  //     }).then(function (result) {
-  //       return App.markAdopted();
-  //     }).catch(function (err) {
-  //       console.log(err.message);
-  //     });
-  //   });
-
-  // }
-
 };
 
 $(function () {

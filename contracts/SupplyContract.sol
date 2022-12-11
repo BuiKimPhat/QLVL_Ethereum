@@ -11,6 +11,7 @@ contract SupplyContract {
         bool isActive;
     }
     Supply[] public supplies; 
+
     function CheckSupplyExist(string memory id) private view returns (bool) {
         uint i = 0;
         for (i = 0; i < supplies.length; i++){
@@ -18,11 +19,10 @@ contract SupplyContract {
         }
         return false;
     }
-    function CreateSupply (string memory id, string memory name, uint quantity, string memory unit) public returns (bool) {
-        if (CheckSupplyExist(id)) return false;
-        Supply memory newSupply = Supply(id, name, quantity, unit, true);
-        supplies.push(newSupply);
-        return true;
+
+    function CreateSupply (string memory id, string memory name, uint quantity, string memory unit) public {
+        if (CheckSupplyExist(id)) return;
+        supplies.push(Supply(id, name, quantity, unit, true));
     }
 
     function GetSupplyCount() public view returns (uint){
@@ -57,16 +57,6 @@ contract SupplyContract {
             if (keccak256(abi.encodePacked(supplies[i].id)) == keccak256(abi.encodePacked(id))) {
                 supplies[i].isActive = false;
                 supplies[i] = newInfo;
-                return true;
-            }
-        }
-        return false;
-    }
-    function DeleteSupply(string memory id)  public returns (bool) {
-        uint i = 0;
-        for (i = 0; i < supplies.length; i++){
-            if (keccak256(abi.encodePacked(supplies[i].id)) == keccak256(abi.encodePacked(id))) {
-                supplies[i].isActive = false;
                 return true;
             }
         }
