@@ -40,7 +40,8 @@ App = {
       // Set the provider for our contract
       App.contracts.SupplyContract.setProvider(App.web3Provider);
 
-      // Use our contract to retrieve supplies
+      // Use our contract to retrieve db
+      if (window.location.pathname == '/transactions.html') return App.getTransactions();
       return App.getAllSupplies();
     });
 
@@ -49,7 +50,7 @@ App = {
 
   initData: () => {
     $.getJSON('../supplies.json', function (data) {
-      for (i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         App.createSupply(data[i].id, data[i].name, data[i].quantity, data[i].unit);
       }
     });
@@ -57,7 +58,7 @@ App = {
 
   bindEvents: function () {
     $(document).on('click', '.btn-transfer', App.handleTransfer);
-    $(document).on('click', '.btn-init-data', App.initData);
+    $(document).on('click', '#initDataBtn', App.initData);
     $(document).on('submit', '#newSupplyForm', App.handleNewSupply);
     $(document).on('submit', '#editSupplyForm', App.handleEditSupply);
   },
@@ -83,6 +84,7 @@ App = {
         supplyTemplate.find('.supply-id').text(ids[i]);
         supplyTemplate.find('.supply-quantity').text(quantities[i]);
         supplyTemplate.find('.supply-unit').text(units[i]);
+        supplyTemplate.find('.transfer-quantity').attr('data-id', ids[i]);
         supplyTemplate.find('.btn-transfer').attr('data-id', ids[i]);
 
         supplyRow.append(supplyTemplate.html());
@@ -93,6 +95,34 @@ App = {
 
   },
 
+  getTransactions: function () {
+    var supplyInstance;
+
+    var transactionRow = $('#transactionRow');
+    var transactionTemplate = $('#transactionTemplate');
+
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) console.log(error);
+      var account = accounts[0];
+      App.contracts.SupplyContract.deployed().then(function (instance) {
+        supplyInstance = instance;
+        console.log(supplyInstance);
+
+        return supplyInstance.GetTransactions.call({from: account});
+      }).then(trans => {
+        console.log(trans);
+        const { 0: ids, 1: quantities } = trans;
+        for (i = 0; i < ids.length; i++) {
+          transactionTemplate.find('.trans-supply-id').text(ids[i]);
+          transactionTemplate.find('.trans-supply-quantity').text(quantities[i]);
+          transactionRow.append(transactionTemplate.html());
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+    });
+  },
+
   createSupply: (id, name, quantity, unit) => {
     var supplyInstance;
     web3.eth.getAccounts(function (error, accounts) {
@@ -100,15 +130,52 @@ App = {
       var account = accounts[0];
       App.contracts.SupplyContract.deployed().then(function (instance) {
         supplyInstance = instance;
-        console.log(supplyInstance);
-        return supplyInstance.CreateSupply.sendTransaction(id, name, quantity, unit, {from: account});
+        return supplyInstance.CreateSupply.sendTransaction(id, name, quantity, unit, { from: account, gas: '1000000' });
       }).then(result => {
         console.log(result);
-        window.location.assign("/");
       }).catch(err => {
         console.log(err.message);
       })
     });
+  },
+
+  updateSupply: (id, name, quantity, unit, isActive) => {
+    var supplyInstance;
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) console.log(error);
+      var account = accounts[0];
+      App.contracts.SupplyContract.deployed().then(function (instance) {
+        supplyInstance = instance;
+        return supplyInstance.UpdateSupply.sendTransaction(id, name, quantity, unit, isActive, { from: account });
+      }).then(result => {
+        console.log(result);
+      }).catch(err => {
+        console.log(err.message);
+      })
+    });
+  },
+
+  transfer: (id, quantity) => {
+    var supplyInstance;
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) console.log(error);
+      var account = accounts[0];
+      App.contracts.SupplyContract.deployed().then(function (instance) {
+        supplyInstance = instance;
+        return supplyInstance.Transfer.sendTransaction(id, quantity, { from: account });
+      }).then(result => {
+        console.log(result);
+        return App.getAllSupplies();
+      }).catch(err => {
+        console.log(err.message);
+      })
+    });
+  },
+
+  handleTransfer: (e) => {
+    const id = $(e.target).data('id');
+    const quantity = $(`input[data-id=${id}]`).val();
+    App.transfer(id, quantity);
   },
 
   handleNewSupply: (e) => {
@@ -118,6 +185,16 @@ App = {
     const quantity = $('#supply-quantity').val();
     const unit = $('#supply-unit').val();
     App.createSupply(id, name, quantity, unit);
+  },
+
+  handleEditSupply: (e) => {
+    e.preventDefault();
+    const id = $('#supply-id').val();
+    const name = $('#supply-name').val();
+    const quantity = $('#supply-quantity').val();
+    const unit = $('#supply-unit').val();
+    const isActive = $('#supply-active').prop('checked');
+    App.updateSupply(id, name, quantity, unit, isActive);
   }
 };
 
