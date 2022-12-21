@@ -13,7 +13,7 @@ if [ $? ] ; then
         echo "NodeJS is already installed"
     fi
     echo "Installing Ganache-cli..."
-    npm install -g ganache
+    sudo npm install -g ganache
 else
     echo "Ganache is already installed"
 fi
@@ -22,7 +22,7 @@ fi
 truffle -v
 if [ $? ] ; then
     echo "Installing Truffle..."
-    npm install -g truffle
+    sudo npm install -g truffle
 else
     echo "Truffle is already installed"
 fi
