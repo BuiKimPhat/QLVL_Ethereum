@@ -2,9 +2,9 @@
 
 # Check and install nodejs and ganache (require network)
 ganache --version
-if [ $? ] ; then
+if [ $? != 0 ] ; then
     node -v
-    if [ $? ] ; then
+    if [ $? != 0 ] ; then
         echo "Installing NodeJS..."
         sudo apt update
         curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\
@@ -20,7 +20,7 @@ fi
 
 # Check and install truffle (require network)
 truffle -v
-if [ $? ] ; then
+if [ $? != 0 ] ; then
     echo "Installing Truffle..."
     sudo npm install -g truffle
 else
@@ -29,7 +29,7 @@ fi
 
 # Check and install dependencies (require network)
 npm ls lite-server
-if [ $? ] ; then
+if [ $? != 0 ] ; then
     echo "Installing lite-server and dependencies..."
     npm install
 else
@@ -37,7 +37,7 @@ else
 fi
 
 # Run ganache in detached mode (start Ethereum private network)
-if [ $GANACHE ] ; then
+if [ -n $GANACHE ] ; then
     ganache instances stop $GANACHE
 fi
 GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
