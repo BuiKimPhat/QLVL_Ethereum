@@ -43,6 +43,11 @@ else
     export GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
 fi
 
+echo "Ganache is running on port 7545"
+echo "Accounts and private keys:"
+cat ./account-keys.json
+echo ""
+
 # Compile and test smart contract
 truffle compile && truffle test
 
