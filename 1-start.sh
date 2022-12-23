@@ -38,9 +38,10 @@ fi
 
 # Run ganache in detached mode (start Ethereum private network)
 if [ ! -z $GANACHE ] ; then
-    ganache instances stop $GANACHE
+    ganache instances stop $GANACHE && GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
+else
+    GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
 fi
-export GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
 
 # Compile and test smart contract
 truffle compile && truffle test
