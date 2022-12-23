@@ -44,7 +44,7 @@ else
 fi
 
 echo "Ganache is running on port 7545"
-echo "Accounts and private keys:"
+echo "Accounts and private keys in ./account-keys.json:"
 cat ./account-keys.json
 echo ""
 
