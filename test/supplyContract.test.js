@@ -11,7 +11,7 @@ contract("SupplyContract", (accounts) => {
     describe("Runnable", async () => {
         it("GetSupplyCount", async () => {
             const result = await supplyContract.GetSupplyCount();
-            console.log(result);
+            // console.log(result);
             assert.equal(result, 0);
         });
     });

@@ -33,11 +33,11 @@ if [ $? != 0 ] ; then
     echo "Installing lite-server and dependencies..."
     npm install
 else
-    echo "lite-serber is already installed"
+    echo "lite-server is already installed"
 fi
 
 # Run ganache in detached mode (start Ethereum private network)
-if [ -n $GANACHE ] ; then
+if [ ! -z $GANACHE ] ; then
     ganache instances stop $GANACHE
 fi
 GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
