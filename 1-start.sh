@@ -40,7 +40,7 @@ fi
 if [ ! -z $GANACHE ] ; then
     ganache instances stop $GANACHE
 fi
-GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
+export GANACHE=$(ganache -h 0.0.0.0 -p 7545 --wallet.accountKeysPath ./account-keys.json -D)
 
 # Compile and test smart contract
 truffle compile && truffle test
