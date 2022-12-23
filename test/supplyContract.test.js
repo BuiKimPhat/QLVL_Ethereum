@@ -21,7 +21,7 @@ contract("SupplyContract", (accounts) => {
             const result = await supplyContract.CreateSupply.sendTransaction("OF003", "Bút chì", "300", "cái");
         });
         it("Create new pencil 2 supply", async () => {
-            const result = await supplyContract.CreateSupply.sendTransaction("OF004", "Bút chì 2", "200", "cái", {from: "0xDD4FE9040a87Db5d33662324a3A41197F3f337F3"});
+            const result = await supplyContract.CreateSupply.sendTransaction("OF004", "Bút chì 2", "200", "cái");
         });
         it("Check count after creation", async () => {
             const result = await supplyContract.GetSupplyCount();
@@ -51,7 +51,7 @@ contract("SupplyContract", (accounts) => {
         it("Get all user transactions", async () => {
             const result = await supplyContract.GetTransactions({ from: accounts[0] });
             const {0: ids, 1: quantities} = result;
-            console.log(result);
+            // console.log(result);
             assert.equal(ids.length, 1);
         });
     });
